@@ -1,0 +1,9 @@
+http://stackoverflow.com/questions/26707687/how-should-i-supervise-an-erlang-mnesia-based-web-application
+
+http://beebole.com/erlang/
+
+http://beebole.com/blog/erlang/tutorial-web-application-erlang/
+
+https://www.google.co.in/search?q=where+to+start+mnesia+in+a+erlang+web+application&oq=where+to+start+mnesia+in+a+erlang+web+application&aqs=chrome..69i57.15625j0j1&sourceid=chrome&es_sm=93&ie=UTF-8
+
+http://hkrishnan.in/tag/mnesia-tutorial/

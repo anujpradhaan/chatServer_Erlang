@@ -1,0 +1,383 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>ChatRooms</title>
+    <script src="/static/jquery.min.js"></script>
+    <script src="/static/chat.js"></script>
+    <script>
+		$(document).ready(function(){
+				$("p").on("click",function(){
+				/*if($(this).attr("class")!=""){
+					$(this).removeClass("yellow");
+				}else{*/
+					$( "p" ).each(function( ) {
+						$(this).removeClass("yellow");
+					});
+					$(this).addClass("yellow");
+				/*}*/	
+				});
+
+				$("#clearChatBox").on("click",function(){
+					$(".activechatroom").text("");
+				});
+				
+		});
+    </script>
+  <!--<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+-->
+  <script>
+  $(function() {
+  	$(".mainWrapper").hide();
+    /*$( "#dialog-confirm" ).dialog({
+      resizable: false,
+      height:140,
+      modal: true
+    });*/
+	$("#logoutButton").click(function(){
+		removeSessionInfo();
+		showLoginButtonPanel();
+	});
+    $("#login").click(function(){
+    	$("#loginForm").removeClass("visibilityNone");
+
+    	/*$( "#loginForm" ).dialog({
+	      resizable: false,
+	      height:200,
+	      modal: true
+	    });*/	
+    });
+    $("#loginMe").click(function(){
+    	/*
+			Validate the user. If exists, then open the websocket connection. Else show the error message
+    	*/
+    	var formData = $("#formLogin").serialize();
+    	alert(formData);
+    	$.ajax({
+    		url:"login",
+    		type:"POST",
+    		data: formData,
+    		success: function  (data,textStatus,jqXHR) {
+    			if((jqXHR.status==200 || jqXHR.status=="200") && data==="Done"){
+    				var username=$("#username").val();
+    				$("#loginForm").hide();
+    				$("#signUpForm").hide();
+    				$("#dialog-confirm").hide();
+    				$(".mainWrapper").show();
+    				$(".logoutdiv").show();
+    				setSessionInfo(username);
+    			}else{
+    				alert("Wrong Username Password Combination");
+    			}	
+    		},
+    		error: function (jqXHR,textStatus,error){
+    			alert("Error!!!, Try again later Or check your username password combination");
+    		}
+    	});
+    	/*$("#dialog-confirm").dialog("close");*/
+    });
+    $("#signup").click(function(){
+    	$("#signUpForm").removeClass("visibilityNone");
+	   /* $( "#signUpForm" ).dialog({
+	      resizable: false,
+	      height:300,
+	      modal: true
+	    });
+    	*/
+	});
+	$("#signMe").click(function(){
+		/*
+			Enter the details to the Signup and show the login popup if enteries are successfull
+    	*/
+    	var formData=$("#formSignUp").serialize();
+    	alert(formData);
+    	$.ajax({
+    		url:"signup",
+    		type:"POST",
+    		data: formData,
+    		statusCode: {
+		    200: function (response) {
+		        $("#signUpForm").addClass("visibilityNone");
+		        $("#loginForm").removeClass("visibilityNone");
+		    },
+		    201: function (response) {
+		        alert('1');
+		    },
+		    400: function (response) {
+		        alert('1');
+		    },
+		    404: function (response) {
+		        alert('1');
+		    }
+		   },
+    		success: function  (data,textStatus,jqXHR) {
+    			alert(jqXHR.status);	
+    		},
+    		error: function (jqXHR,textStatus,error){
+    			alert(jqXHR+" : "+error);
+    		}
+    	});
+    	/*$("#dialog-confirm").dialog("close");*/
+    });
+  });
+  </script>
+    <style>
+		.chatroombox{
+			width:300px;
+			min-height: 200px;
+			max-height: 200px;
+			overflow: auto;
+		}
+		.borderBlack{
+			border:1px solid black;
+		}
+		.yellow{
+			background-color:yellow;	
+		}
+		.red{
+			background-color:yellow;	
+		}
+		.activechatroom{
+			width :300px;
+			min-height: 200px;
+			max-height: 200px;
+			overflow: auto;
+		}
+		.activechatroomusers{
+			width:200px;
+			min-height: 200px;
+			max-height: 200px;
+			overflow: auto;
+		}
+		p{
+			padding-left:30px;
+			border-bottom:1px solid green;
+		}
+		.visibilityNone{
+			display: none;
+		}
+    </style>
+  </head>
+  <body>
+  	<div class="mainWrapper">
+	  <div>
+		<h2>
+			Chat Application: ChatNow
+		</h2>
+		<div id="logoutdiv">
+			<h3 id="LogInUser">
+
+			</h3>
+			<input type="button" value="LogOut"  id="logoutButton" />
+		</div>
+		<h3 id="messages">
+
+		</h3>
+	</div>
+    <table>
+		<tr>
+			<td>
+				<div class="chatroombox borderBlack" >
+					<p>
+						Room1
+					</p>
+					<p>
+						Room2
+					</p>
+					<p>
+						Room3
+					</p>
+				</div>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<td>
+							<input type="button" value="Join This Chat Room" />
+ 						</td>
+ 					</tr>
+ 					<tr>
+ 						<td>
+							<input type="text" id="newChatRoomName" />
+							<input type="button" value="Add New Chat Room" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="button" value="Reset" />
+ 						</td>
+ 					</tr>
+				</table>
+			</td>
+		</tr>
+    </table>
+    <br>
+    <br>
+    <table>
+		<tr>
+			<td>
+				<div>
+					<h2>
+						Chat room Name 
+					</h2>
+				</div>
+			</td>
+			<td>
+				<div>
+					<h2>
+						Active Users 
+					</h2>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				
+				<div class="activechatroom borderBlack" >
+					
+				</div>
+				<br>
+				<div>
+					<table>
+						<tr>
+							<td>
+								<input type="text" id="message"/>
+							</td>
+							<td>
+								<input type="button"  id="send-button" value="send"/>
+								<input type="button" value="Clear" id="clearChatBox"/>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</td>
+			<td>
+				<div class="activechatroomusers borderBlack" >
+					<p>
+						User1
+					</p>
+					<p>
+						User2
+					</p>
+					<p>
+						User3
+					</p>
+				</div>
+				<br>
+				<div>
+					<table>
+						<tr>
+							<td>
+								<input type="button" value="Chat Privetely"/>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</td>
+		</tr>
+    </table>
+</div>
+    <!--
+	Login/SignUp Pop Up
+	-->
+    <div id="dialog-confirm" title="Choose and Option">
+	  <input type="button" value="Login"  id="login" />
+	  <input type="button" value="SignUp" id="signup" />
+	</div>
+	
+	<div id="loginForm" class="visibilityNone" title="Login">
+	  <form id="formLogin" method="post" action="login"> 
+		<table>
+		  	<tr>
+		  		<td>
+		  			Username:
+		  		</td>
+		  		<td>
+		  			<input type="text"  id="username" name="username"/>
+		  		</td>
+		  	</tr>
+		  	<tr>
+		  		<td>
+		  			Password:
+		  		</td>
+		  		<td>	
+		  			<input type="password" id="password" name="password" />
+		  		</td>	
+			</tr>
+			<tr>
+		  		<td>
+		  			
+		  		</td>
+		  		<td>
+		  			<input type="button"  id="loginMe" value="Login"/>
+		  		</td>
+		  	</tr>
+		</table>
+	  </form>
+	</div>
+
+	<div id="signUpForm" class="visibilityNone" title="SignUp">
+	  <form id="formSignUp" method ="post" action="signup">
+	  <table>
+	  		<tr>
+		  		<td>
+		  			Email:
+		  		</td>
+		  		<td>
+		  			<input type="email" name="email"  id="email" />
+		  		</td>
+		  	</tr>
+		  	<tr>
+		  		<td>
+		  			Username:
+		  		</td>
+		  		<td>
+		  			<input type="text"  id="username" name="username" />
+		  		</td>
+		  	</tr>
+		  	<tr>
+		  		<td>
+		  			Password:
+		  		</td>
+		  		<td>	
+		  			<input type="password" id="password" name="password"/>
+		  		</td>	
+			</tr>
+			<tr>
+		  		<td>
+		  			Confirm Password:
+		  		</td>
+		  		<td>
+		  			<input type="password"  id="confirmpassword" name="confirmpassword"/>
+		  		</td>
+		  	</tr>
+		  	<tr>
+		  		<td>
+		  			DOB:
+		  		</td>
+		  		<td>
+		  			<input type="date"  id="dob" name="dob"/>
+		  		</td>
+		  	</tr>
+		  	<tr>
+		  		<td>
+		  			Country:
+		  		</td>
+		  		<td>
+		  			<input type="text"  id="country" name="country"/>
+		  		</td>
+		  	</tr>
+		  	<tr>
+		  		<td>
+		  			
+		  		</td>
+		  		<td>
+		  			<input type="button"  id="signMe" value="SignUp"/>
+		  		</td>
+		  	</tr>
+		</table>
+	  </form>
+	</div>
+  </body>
+</html>

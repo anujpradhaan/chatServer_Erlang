@@ -1,0 +1,17 @@
+1)  Through Websockets you can only send a text message as per our requirement. Thus you need to integrate all the active chatrooms inside that text message only. Whatever we are passing need to be sent through that message only.
+
+WebStorage is one of the concepts to be used here. This is a secure way of storing the information.
+
+To Implement Login
+	Make a HTTP handler, which will check user against DB
+
+
+To implement SignUp
+	Make a HTTP handler, which will enter the user info to DB and redirect to the login screen
+
+
+After user LoggedIn
+	Open a websocket connection to share messages among multiple processes. Each message will contain the chat Room Name as well as UserName. This allows us to share messages on the basis of chat rooms. This need to be done with websockets only. 
+	Note: The chatting feature need to be implemented using websockets and the login feature can be implemented using HTTP handlers.
+
+

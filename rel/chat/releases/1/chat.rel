@@ -1,0 +1,16 @@
+%% rel generated at {2015,6,22} {21,57,27}
+{release,{"chat","1"},
+         {erts,"5.9.1"},
+         [{kernel,"2.15.1"},
+          {stdlib,"1.18.1"},
+          {sasl,"2.2.1"},
+          {runtime_tools,"1.8.8"},
+          {crypto,"2.1"},
+          {mimetypes,"1.0"},
+          {ranch,"0.8.4"},
+          {cowboy,"0.8.6"},
+          {mnesia,"4.7"},
+          {chat,"1"},
+          {appmon,"2.1.14.1",load},
+          {gs,"1.5.15.1",load}]}.
+

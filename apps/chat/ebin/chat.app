@@ -1,0 +1,11 @@
+{application,chat,
+             [{description,[]},
+              {vsn,"1"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {mod,{chat_app,[]}},
+              {env,[]},
+              {modules,[admin_handler,chat_app,chat_http_login_handler,
+                        chat_http_signup_handler,chat_room,chat_sup,
+                        chat_ws_handler,chatroom_sup,model_chathistory,
+                        model_chatrooms,model_privatechat,model_users]}]}.

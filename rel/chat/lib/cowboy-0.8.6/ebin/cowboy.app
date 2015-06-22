@@ -1,0 +1,20 @@
+%% app generated at {2015,6,22} {21,57,27}
+{application,cowboy,
+             [{description,"Small, fast, modular HTTP server."},
+              {vsn,"0.8.6"},
+              {id,"Cowboy"},
+              {modules,[cowboy,cowboy_app,cowboy_bstr,cowboy_client,
+                        cowboy_clock,cowboy_handler,cowboy_http,
+                        cowboy_http_handler,cowboy_loop_handler,
+                        cowboy_middleware,cowboy_multipart,cowboy_protocol,
+                        cowboy_req,cowboy_rest,cowboy_router,cowboy_spdy,
+                        cowboy_static,cowboy_sub_protocol,cowboy_sup,
+                        cowboy_websocket,cowboy_websocket_handler]},
+              {registered,[cowboy_clock,cowboy_sup]},
+              {applications,[kernel,stdlib,ranch,crypto]},
+              {included_applications,[]},
+              {env,[]},
+              {maxT,infinity},
+              {maxP,infinity},
+              {mod,{cowboy_app,[]}}]}.
+
