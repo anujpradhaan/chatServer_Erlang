@@ -4,6 +4,20 @@
 
 -include("chatroom_db.hrl").
 
+%%Add new Chat Rooms
+
+addNewRoom(NewRoom,Username,Req) -> 
+    Room = #chatrooms{
+    name=NewRoom, %%Name of the chatroom
+    created_by=Username, %%Username of the user who created the chatroom
+    active=1
+    },
+    R = fun() ->
+            mnesia:write(Room)
+        end,
+    mnesia:transaction(R).    
+
+%%Insert New Users
 insert_users(Username,Password,Email,Country,Dob,Req) ->
     User = #users{
     	username=Username, %%username provided  by the user

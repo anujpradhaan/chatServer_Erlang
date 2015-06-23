@@ -6,11 +6,12 @@
     <script src="/static/chat.js"></script>
     <script>
 		$(document).ready(function(){
-				$("p").on("click",function(){
+
+				$(document).on("click","#container p",function(){
 				/*if($(this).attr("class")!=""){
 					$(this).removeClass("yellow");
 				}else{*/
-					$( "p" ).each(function( ) {
+					$("#container p").each(function( ) {
 						$(this).removeClass("yellow");
 					});
 					$(this).addClass("yellow");
@@ -29,17 +30,11 @@
 -->
   <script>
   $(function() {
-  	$(".mainWrapper").hide();
-    /*$( "#dialog-confirm" ).dialog({
-      resizable: false,
-      height:140,
-      modal: true
-    });*/
-	$("#logoutButton").click(function(){
-		removeSessionInfo();
-		showLoginButtonPanel();
+  	$(document).on('click',"#container #logoutButton",function(){
+		$("#container").text("");
+		$("#dialog-confirm").show();
 	});
-    $("#login").click(function(){
+    $("#login").on('click',function(){
     	$.ajax({
     		url:"loginform",
     		type:"GET",
@@ -59,7 +54,8 @@
 		    }
 		   },
     		success: function  (data,textStatus,jqXHR) {
-    				$("#loginForm").html(data);
+    				$("#container").html("");
+    				$("#container").append(data);
     		},
     		error: function (jqXHR,textStatus,error){
     			alert(jqXHR+" : "+error);
@@ -72,11 +68,12 @@
 	      modal: true
 	    });*/	
     });
-    $("#loginMe").click(function(){
+    $(document).on("click","#container .loginMe",function(e){
     	/*
 			Validate the user. If exists, then open the websocket connection. Else show the error message
     	*/
     	var formData = $("#formLogin").serialize();
+    	var username= $("#container #username").val();
     	alert(formData);
     	$.ajax({
     		url:"login",
@@ -84,13 +81,34 @@
     		data: formData,
     		success: function  (data,textStatus,jqXHR) {
     			if((jqXHR.status==200 || jqXHR.status=="200") && data==="Done"){
-    				var username=$("#username").val();
-    				$("#loginForm").hide();
-    				$("#signUpForm").hide();
-    				$("#dialog-confirm").hide();
-    				$(".mainWrapper").show();
-    				$(".logoutdiv").show();
-    				setSessionInfo(username);
+    				$.ajax({
+			    		url:"chatbox",
+			    		type:"GET",
+			    		data: "",
+			    		statusCode: {
+						    200: function (response) {
+						        
+						    },
+						    201: function (response) {
+						        alert('1');
+						    },
+						    400: function (response) {
+						        alert('1');
+						    },
+						    404: function (response) {
+						        alert('1');
+						    }
+					   },
+			    		success: function  (data,textStatus,jqXHR) {
+			    				$("#container").html("");
+    							$("#container").append(data);
+    							$("#container #username").val(username);
+			    				setSessionInfo();
+			    		},
+			    		error: function (jqXHR,textStatus,error){
+			    			alert(jqXHR+" : "+error);
+			    		}
+			    	});
     			}else{
     				alert("Wrong Username Password Combination");
     			}	
@@ -101,7 +119,7 @@
     	});
     	/*$("#dialog-confirm").dialog("close");*/
     });
-    $("#signup").click(function(){
+    $("#signup").on("click",function(){
     	$.ajax({
     		url:"signupform",
     		type:"GET",
@@ -121,14 +139,15 @@
 		    }
 		   },
     		success: function  (data,textStatus,jqXHR) {
-    				$("#signUpForm").html(data);
+    				$("#container").html("");
+    				$("#container").append(data);
     		},
     		error: function (jqXHR,textStatus,error){
     			alert(jqXHR+" : "+error);
     		}
     	});
 	});
-	$("#signMe").click(function(){
+	$(document).on('click',"#container .signMe",function(e){
 		/*
 			Enter the details to the Signup and show the login popup if enteries are successfull
     	*/
@@ -202,138 +221,13 @@
     </style>
   </head>
   <body>
-  	<div class="mainWrapper">
-	  <div>
-		<h2>
-			Chat Application: ChatNow
-		</h2>
-		<div id="logoutdiv">
-			<h3 id="LogInUser">
-
-			</h3>
-			<input type="button" value="LogOut"  id="logoutButton" />
-		</div>
-		<h3 id="messages">
-
-		</h3>
-	</div>
-    <table>
-		<tr>
-			<td>
-				<div class="chatroombox borderBlack" >
-					<p>
-						Room1
-					</p>
-					<p>
-						Room2
-					</p>
-					<p>
-						Room3
-					</p>
-				</div>
-			</td>
-			<td>
-				<table>
-					<tr>
-						<td>
-							<input type="button" value="Join This Chat Room" />
- 						</td>
- 					</tr>
- 					<tr>
- 						<td>
-							<input type="text" id="newChatRoomName" />
-							<input type="button" value="Add New Chat Room" />
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<input type="button" value="Reset" />
- 						</td>
- 					</tr>
-				</table>
-			</td>
-		</tr>
-    </table>
-    <br>
-    <br>
-    <table>
-		<tr>
-			<td>
-				<div>
-					<h2>
-						Chat room Name 
-					</h2>
-				</div>
-			</td>
-			<td>
-				<div>
-					<h2>
-						Active Users 
-					</h2>
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				
-				<div class="activechatroom borderBlack" >
-					
-				</div>
-				<br>
-				<div>
-					<table>
-						<tr>
-							<td>
-								<input type="text" id="message"/>
-							</td>
-							<td>
-								<input type="button"  id="send-button" value="send"/>
-								<input type="button" value="Clear" id="clearChatBox"/>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</td>
-			<td>
-				<div class="activechatroomusers borderBlack" >
-					<p>
-						User1
-					</p>
-					<p>
-						User2
-					</p>
-					<p>
-						User3
-					</p>
-				</div>
-				<br>
-				<div>
-					<table>
-						<tr>
-							<td>
-								<input type="button" value="Chat Privetely"/>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</td>
-		</tr>
-    </table>
-</div>
-    <!--
-	Login/SignUp Pop Up
-	-->
-    <div id="dialog-confirm" title="Choose and Option">
+  	<div id="dialog-confirm" title="Choose and Option">
 	  <input type="button" value="Login"  id="login" />
 	  <input type="button" value="SignUp" id="signup" />
 	</div>
-	
-	<div id="loginForm" class="" title="Login">
-	  
-	</div>
+	<div id="container">
 
-	<div id="signUpForm" class="" title="SignUp">
-	  
 	</div>
-  </body>
+	<input type="hidden" value="default" id="currentlyActiveChatRoom" />	
+</body>
 </html>

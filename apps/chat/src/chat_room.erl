@@ -45,12 +45,27 @@ init([]) ->
                 "/login", chat_http_login_handler,[]
                },
                {
+                "/signupform", signup_form_handler,[] %This is a module to return the signup form code
+               },
+               {
+                "/loginform", login_form_handler,[] %This is a module to return the login form code
+               },
+               {
                 "/signup", chat_http_signup_handler,[]
+               },
+               {
+                "/chatbox",chatbox_handler,[]
+               },
+               {
+                "/addnewchatroom",addnewchatroom_handler,[]
+               },
+               {
+                "/availableChatRooms",availablechatrooms_handler,[]
                },
                {
                 "/", cowboy_static,
                 [{directory, {priv_dir, chat, [<<"static">>]}},
-                 {file, <<"chatrooms.html">>},
+                 {file, <<"newRoom.html">>},
                  {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]
                },
 

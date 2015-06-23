@@ -1,4 +1,4 @@
-%% app generated at {2015,6,22} {21,57,27}
+%% app generated at {2015,6,23} {23,21,41}
 {application,runtime_tools,
              [{description,"RUNTIME_TOOLS version 1"},
               {vsn,"1.8.8"},

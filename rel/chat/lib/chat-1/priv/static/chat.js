@@ -1,14 +1,16 @@
 var socket;
 
 function add_message(message) {
-    $('#messages').append('<p></p>').children().last().text(message);
+
+    $('#container #messages').append('<p></p>').children().last().text(message);
 }
 
 function add_message_chatwindow(message){
-    $(".activechatroom").append("<p>"+message+"</p>");
+    $("#container .activechatroom").append("<p>"+message+"</p>");
 }
+
 function read_message_input() {
-    return $('#message').val();
+    return $('#container #message').val();
 }
 
 /*Function to store the active chatroom in the WebStorage*/
@@ -39,7 +41,11 @@ function connect_to_chat() {
 
     /*Sockets receives data from the server on onmessage event*/
     socket.onmessage = function(event) {
-        add_message_chatwindow(event.data);
+        var msg=event.data;
+        var chatRoom=msg.split(":");
+        var currentlyActiveChatRoom = $("#currentlyActiveChatRoom").val().trim();
+        if(currentlyActiveChatRoom === chatRoom[0].trim())
+            add_message_chatwindow(chatRoom[1]+":"+chatRoom[2]);
     };
 
     socket.onclose = function() {
@@ -47,10 +53,34 @@ function connect_to_chat() {
     };
 }
 
-function setSessionInfo(username){
+function setSessionInfo(){
     if(typeof(Storage) !== "undefined") {
-        sessionStorage.username =username;
-        $("#LogInUser").text(sessionStorage.username); 
+        //sessionStorage.username =username;
+        //$("#LogInUser").text(sessionStorage.username); 
+        $.ajax({
+        url:"availableChatRooms",
+        type:"GET",
+        data: "",
+        success: function  (data,textStatus,jqXHR) {
+            if((jqXHR.status==200 || jqXHR.status=="200") && data !=""){
+                var rooms=data;
+                rooms=rooms.split(",");
+                $("#container .chatroombox").text("");
+                for (i = 0;i < rooms.length; i++) { 
+                    $("#container .chatroombox").append("<p>"+rooms[i]+"</p>");
+                }
+            }else if(data ==""){
+                alert("No Chat rooms exists");
+            }else{
+                alert("Unable to Fetch the chatrooms");
+            }   
+        },
+        error: function (jqXHR,textStatus,error){
+            alert("Error!!!, Try again later");
+        }
+        });
+        /*Hide the login signup panel*/
+        $("#dialog-confirm").hide();
         connect_to_chat();
     } else {
         add_message("WebStorage Is not compatible");
@@ -59,25 +89,11 @@ function setSessionInfo(username){
 
 function send_message(e) {
     var message = read_message_input();
-    var browserSideMessage=message;
-    if(typeof(Storage) !== "undefined"){
-
-       var username = "";
-       if(sessionStorage.username){
-            username=sessionStorage.username;
-            message=username+":"+message;
-            browserSideMessage=username+":"+browserSideMessage;
-       }
-       var chatroom = "";
-       if(sessionStorage.activechatroom){
-            chatroom=sessionStorage.activechatroom;
-            message=chatroom+":"+message
-       }
-
-    }
-    //#add_message_chatwindow(message);
+    var username=$("#container #username").val();
+    add_message_chatwindow(username+":"+message);
     /*Socket's send method is used to pass the information to the server*/
-    socket.send(browserSideMessage);
+    var activeChatWindow=$("#currentlyActiveChatRoom").val();
+    socket.send(activeChatWindow+":"+username+":"+message);
     $('#message').val("");
 }
 
@@ -95,7 +111,7 @@ function showLoginButtonPanel(){
 function alreadyLoggedIn(){
     alert(sessionStorage.username);
     if(sessionStorage.username && (sessionStorage.username != "null")) {
-      $("#LogInUser").text(sessionStorage.username);
+      $("#container #LogInUser").text(sessionStorage.username);
       
       return true;  
    }else{
@@ -114,8 +130,77 @@ $(document).ready(function() {
     The login will work till the window is open. 
     Once the window is closed, You need to login again.
     */
-    if(alreadyLoggedIn()){
+/*    if(alreadyLoggedIn()){
         connect_to_chat();
-    } 
-    $('#send-button').click(send_message);
+    }*/
+
+    /*Fetch All the ChatRooms available*/
+    $(document).on('click',"#container #latestListofChatRooms",function(){
+        $.ajax({
+        url:"availableChatRooms",
+        type:"GET",
+        data: "",
+        success: function  (data,textStatus,jqXHR) {
+            if((jqXHR.status==200 || jqXHR.status=="200") && data !=""){
+                var rooms=data;
+                rooms=rooms.split(",");
+                $("#container .chatroombox").text("");
+                for (i = 0;i < rooms.length; i++) { 
+                    $("#container .chatroombox").append("<p>"+rooms[i]+"</p>");
+                }
+            }else if(data ==""){
+                alert("No Chat rooms exists");
+            }else{
+                alert("Unable to Fetch the chatrooms");
+            }   
+        },
+        error: function (jqXHR,textStatus,error){
+            alert("Error!!!, Try again later");
+        }
+        });        
+    });
+    $(document).on('click',"#container #send-button",send_message);
+
+    /*Select a Chat Room*/
+    $(document).on("click","#container #joinchatroombutton",function(){
+        //alert($("#container .chatroombox .yellow").text());
+       var room=$("#container .chatroombox .yellow").text().trim();
+       $("#currentlyActiveChatRoom").val(room); 
+       $("#container #showActiveChatroom").text(room);
+       $("#container .activechatroom").text("");
+    });
+
+    /*Reset Button */
+    
+    $(document).on("click","#container #resetButton",function(){
+        $("#container .activechatroom").text("");
+        $("#currentlyActiveChatRoom").val("default"); 
+        $("#container #showActiveChatroom").text("Default");       
+    });
+    /*Clear Chat Box*/
+    $(document).on("click","#container #clearChatBox",function(){
+        $("#container .activechatroom").text("");      
+    });
+
+    $(document).on("click","#container #addNewChatRoomButton",function(){
+       var formData=$("#container #addChatRoomForm").serialize();
+       var roomname=$("#container #newChatRoomName").val();
+       var username=$("#container #username").val();
+       //socket.send("newroom"+","+roomname+","+username);
+       $.ajax({
+            url:"addnewchatroom",
+            type:"POST",
+            data: formData,
+            success: function  (data,textStatus,jqXHR) {
+                if((jqXHR.status==200 || jqXHR.status=="200") && data==="Done"){
+                    $("#container .chatroombox").append("<p>"+roomname+"</p>");
+                }else{
+                    alert("Wrong Username Password Combination");
+                }   
+            },
+            error: function (jqXHR,textStatus,error){
+                alert("Error!!!, Try again later or Try changing your room name");
+            }
+        });
+    });    
 })

@@ -15,6 +15,17 @@ websocket_init(_TransportName, Req, _Opts) ->
     {ok, Req, undefined_state}.
 
 websocket_handle({text, Msg}, Req, State) ->
+    %Make the DB entry here and If the chat room is unique then create it otherwise report and error.
+    %MsgList=string:tokens(Msg,",").
+    %if string:len(MsgList) > 1 ->
+    %    [Head|Tail] = MsgList,
+    %    if string:equals(Head,"newroom") ->
+    %        chat_room:set_new_chatroom(self(),Tail)
+    %    end,
+    %    if string:equals(Head,"chatroom") ->
+    %        chat_room:send_message_in_chatroom(self(),Tail)
+    %    end    
+    %end,    
     chat_room:send_message(self(), Msg),
     {ok, Req, State};
 websocket_handle(_Data, Req, State) ->

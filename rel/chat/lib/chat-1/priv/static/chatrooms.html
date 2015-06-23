@@ -40,7 +40,31 @@
 		showLoginButtonPanel();
 	});
     $("#login").click(function(){
-    	$("#loginForm").removeClass("visibilityNone");
+    	$.ajax({
+    		url:"loginform",
+    		type:"GET",
+    		data: "",
+    		statusCode: {
+		    200: function (response) {
+		        
+		    },
+		    201: function (response) {
+		        alert('1');
+		    },
+		    400: function (response) {
+		        alert('1');
+		    },
+		    404: function (response) {
+		        alert('1');
+		    }
+		   },
+    		success: function  (data,textStatus,jqXHR) {
+    				$("#loginForm").html(data);
+    		},
+    		error: function (jqXHR,textStatus,error){
+    			alert(jqXHR+" : "+error);
+    		}
+    	});
 
     	/*$( "#loginForm" ).dialog({
 	      resizable: false,
@@ -78,13 +102,31 @@
     	/*$("#dialog-confirm").dialog("close");*/
     });
     $("#signup").click(function(){
-    	$("#signUpForm").removeClass("visibilityNone");
-	   /* $( "#signUpForm" ).dialog({
-	      resizable: false,
-	      height:300,
-	      modal: true
-	    });
-    	*/
+    	$.ajax({
+    		url:"signupform",
+    		type:"GET",
+    		data: "",
+    		statusCode: {
+		    200: function (response) {
+		        
+		    },
+		    201: function (response) {
+		        alert('1');
+		    },
+		    400: function (response) {
+		        alert('1');
+		    },
+		    404: function (response) {
+		        alert('1');
+		    }
+		   },
+    		success: function  (data,textStatus,jqXHR) {
+    				$("#signUpForm").html(data);
+    		},
+    		error: function (jqXHR,textStatus,error){
+    			alert(jqXHR+" : "+error);
+    		}
+    	});
 	});
 	$("#signMe").click(function(){
 		/*
@@ -286,98 +328,12 @@
 	  <input type="button" value="SignUp" id="signup" />
 	</div>
 	
-	<div id="loginForm" class="visibilityNone" title="Login">
-	  <form id="formLogin" method="post" action="login"> 
-		<table>
-		  	<tr>
-		  		<td>
-		  			Username:
-		  		</td>
-		  		<td>
-		  			<input type="text"  id="username" name="username"/>
-		  		</td>
-		  	</tr>
-		  	<tr>
-		  		<td>
-		  			Password:
-		  		</td>
-		  		<td>	
-		  			<input type="password" id="password" name="password" />
-		  		</td>	
-			</tr>
-			<tr>
-		  		<td>
-		  			
-		  		</td>
-		  		<td>
-		  			<input type="button"  id="loginMe" value="Login"/>
-		  		</td>
-		  	</tr>
-		</table>
-	  </form>
+	<div id="loginForm" class="" title="Login">
+	  
 	</div>
 
-	<div id="signUpForm" class="visibilityNone" title="SignUp">
-	  <form id="formSignUp" method ="post" action="signup">
-	  <table>
-	  		<tr>
-		  		<td>
-		  			Email:
-		  		</td>
-		  		<td>
-		  			<input type="email" name="email"  id="email" />
-		  		</td>
-		  	</tr>
-		  	<tr>
-		  		<td>
-		  			Username:
-		  		</td>
-		  		<td>
-		  			<input type="text"  id="username" name="username" />
-		  		</td>
-		  	</tr>
-		  	<tr>
-		  		<td>
-		  			Password:
-		  		</td>
-		  		<td>	
-		  			<input type="password" id="password" name="password"/>
-		  		</td>	
-			</tr>
-			<tr>
-		  		<td>
-		  			Confirm Password:
-		  		</td>
-		  		<td>
-		  			<input type="password"  id="confirmpassword" name="confirmpassword"/>
-		  		</td>
-		  	</tr>
-		  	<tr>
-		  		<td>
-		  			DOB:
-		  		</td>
-		  		<td>
-		  			<input type="date"  id="dob" name="dob"/>
-		  		</td>
-		  	</tr>
-		  	<tr>
-		  		<td>
-		  			Country:
-		  		</td>
-		  		<td>
-		  			<input type="text"  id="country" name="country"/>
-		  		</td>
-		  	</tr>
-		  	<tr>
-		  		<td>
-		  			
-		  		</td>
-		  		<td>
-		  			<input type="button"  id="signMe" value="SignUp"/>
-		  		</td>
-		  	</tr>
-		</table>
-	  </form>
+	<div id="signUpForm" class="" title="SignUp">
+	  
 	</div>
   </body>
 </html>

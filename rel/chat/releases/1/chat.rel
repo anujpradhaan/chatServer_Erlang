@@ -1,4 +1,4 @@
-%% rel generated at {2015,6,22} {21,57,27}
+%% rel generated at {2015,6,23} {23,21,41}
 {release,{"chat","1"},
          {erts,"5.9.1"},
          [{kernel,"2.15.1"},

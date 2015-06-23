@@ -15,3 +15,17 @@ After user LoggedIn
 	Note: The chatting feature need to be implemented using websockets and the login feature can be implemented using HTTP handlers.
 
 
+******************What you will need*************************8
+
+A gen_server
+
+A DB to store the chatrooms as well as the user details.
+
+Links For using a gen_server
+
+1) http://20bits.com/article/erlang-a-generic-server-tutorial
+
+2) http://www.erlang.org/doc/design_principles/gen_server_concepts.html
+
+3) http://learnyousomeerlang.com/clients-and-servers
+
